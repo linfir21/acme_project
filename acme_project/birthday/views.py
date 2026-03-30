@@ -25,6 +25,9 @@ class OnlyAuthorMixin(UserPassesTestMixin):
 
 class BirthdayListView(LoginRequiredMixin, ListView):
     model = Birthday
+    # Оптимизация: prefetch_related для ManyToMany (tags) 
+    # и select_related для ForeignKey (author)
+    queryset = Birthday.objects.prefetch_related('tags').select_related('author')
     ordering = 'id'
     paginate_by = 10
 
@@ -59,13 +62,13 @@ class BirthdayDetailView(LoginRequiredMixin, DetailView):
             self.object.birthday
         )
         context['form'] = CongratulationForm()
+        # Оптимизация: select_related для author в поздравлениях
         context['congratulations'] = (
             self.object.congratulations.select_related('author')
         )
         return context
 
 
-# View-функция для добавления поздравления (вместо CBV)
 @login_required
 def add_comment(request, pk):
     birthday = get_object_or_404(Birthday, pk=pk)
