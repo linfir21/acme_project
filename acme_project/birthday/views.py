@@ -25,7 +25,7 @@ class OnlyAuthorMixin(UserPassesTestMixin):
 
 class BirthdayListView(LoginRequiredMixin, ListView):
     model = Birthday
-    # Оптимизация: prefetch_related для ManyToMany (tags) 
+    # Оптимизация: prefetch_related для ManyToMany (tags)
     # и select_related для ForeignKey (author)
     queryset = Birthday.objects.prefetch_related('tags').select_related('author')
     ordering = 'id'
