@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 .idea
+
+# Uploaded user files
+media/
